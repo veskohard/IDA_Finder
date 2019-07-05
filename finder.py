@@ -1,4 +1,7 @@
+import idautils
 import idaapi
+import idc
+import ida_search
 
 class myplugin_t(idaapi.plugin_t):
     flags = idaapi.PLUGIN_UNL
@@ -12,8 +15,8 @@ class myplugin_t(idaapi.plugin_t):
 
     def run(self, arg):
 		if idaapi.cvar.inf.is_be():
-			Message("is_be = true\n")
-			ea = MinEA()
+			print "is_be = true"
+			ea = idc.MinEA()
 			aaa = idc.ScreenEA()
 			rett = []
 			a4 = (aaa >> 24) & 0xFF
@@ -22,15 +25,15 @@ class myplugin_t(idaapi.plugin_t):
 			a1 = aaa & 0xFF
 			bin_str = "%0.2X %0.2X %0.2X %0.2X" % (a4,a3,a2,a1) 
 			while True:
-				ea = FindBinary(ea, SEARCH_DOWN|SEARCH_CASE, bin_str)
+				ea = idc.FindBinary(ea, 1|4, bin_str)
 				if ea == idaapi.BADADDR:
 					break
 				rett.append(ea)
-				Message("Found BE offset -> 0x%0.8X\n" % ea)
+				print "Found BE offset -> 0x%0.8X" % ea
 				ea += 1
 			if not rett:
-				Message("BE offset not match [%s]\n" % bin_str)
-			ea = MinEA()
+				print "BE offset not match [%s]" % bin_str
+			ea = idc.MinEA()
 			aaa = idc.ScreenEA()
 			aaa = aaa + 1
 			rett = []
@@ -40,17 +43,17 @@ class myplugin_t(idaapi.plugin_t):
 			a1 = aaa & 0xFF
 			bin_str = "%0.2X %0.2X %0.2X %0.2X" % (a4,a3,a2,a1) 
 			while True:
-				ea = FindBinary(ea, SEARCH_DOWN|SEARCH_CASE, bin_str)
+				ea = idc.FindBinary(ea, 1|4, bin_str)
 				if ea == idaapi.BADADDR:
 					break
 				rett.append(ea)
-				Message("Found BE call -> 0x%0.8X\n" % ea)
+				print "Found BE call -> 0x%0.8X" % ea
 				ea += 1
 			if not rett:
-				Message("BE call not match [%s]\n" % bin_str)	
+				print "BE call not match [%s]" % bin_str
 		else:
-			Message("is_be = false\n")
-			ea = MinEA()
+			print "is_be = false"
+			ea = idc.MinEA()
 			aaa = idc.ScreenEA()
 			ret = []
 			a4 = (aaa >> 24) & 0xFF
@@ -59,16 +62,16 @@ class myplugin_t(idaapi.plugin_t):
 			a1 = aaa & 0xFF
 			bin_str = "%0.2X %0.2X %0.2X %0.2X" % (a1,a2,a3,a4) 
 			while True:
-				ea = FindBinary(ea, SEARCH_DOWN|SEARCH_CASE, bin_str)
+				ea = idc.FindBinary(ea, 1|4, bin_str)
 				if ea == idaapi.BADADDR:
 					break
 				ret.append(ea)
-				Message("Found LE offset -> 0x%0.8X\n" % ea)
+				print "Found LE offset -> 0x%0.8X" % ea
 				ea += 1
 			if not ret:
-				Message("LE offset not match [%s]\n" % bin_str)
+				print "LE offset not match [%s]" % bin_str
 				
-			ea = MinEA()
+			ea = idc.MinEA()
 			aaa = idc.ScreenEA()
 			rett = []
 			aaa = aaa + 1
@@ -78,14 +81,14 @@ class myplugin_t(idaapi.plugin_t):
 			a1 = aaa & 0xFF
 			bin_str = "%0.2X %0.2X %0.2X %0.2X" % (a1,a2,a3,a4) 
 			while True:
-				ea = FindBinary(ea, SEARCH_DOWN|SEARCH_CASE, bin_str)
+				ea = idc.FindBinary(ea, 1|4, bin_str)
 				if ea == idaapi.BADADDR:
 					break
 				rett.append(ea)
-				Message("Found LE call -> 0x%0.8X\n" % ea)
+				print "Found LE call -> 0x%0.8X" % ea
 				ea += 1
 			if not rett:
-				Message("LE call not match [%s]\n" % bin_str)
+				print "LE call not match [%s]" % bin_str
 
 		
 			
